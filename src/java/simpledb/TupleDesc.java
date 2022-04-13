@@ -45,6 +45,8 @@ public class TupleDesc implements Serializable {
         return null;
     }
 
+    TDItem[] tdItems;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -59,7 +61,10 @@ public class TupleDesc implements Serializable {
      *            be null.
      */
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
-        // some code goes here
+        tdItems = new TDItem[typeAr.length];
+        for (int i = 0; i < tdItems.length; ++i) {
+          tdItems[i] = new TDItem(typeAr[i], fieldAr[i]);
+        }
     }
 
     /**
@@ -72,14 +77,17 @@ public class TupleDesc implements Serializable {
      */
     public TupleDesc(Type[] typeAr) {
         // some code goes here
+      tdItems = new TDItem[typeAr.length];
+      for (int i = 0; i < typeAr.length; ++i) {
+        tdItems[i] = new TDItem(typeAr[i], "");
+      }
     }
 
     /**
      * @return the number of fields in this TupleDesc
      */
     public int numFields() {
-        // some code goes here
-        return 0;
+        return tdItems.length;
     }
 
     /**
@@ -92,8 +100,10 @@ public class TupleDesc implements Serializable {
      *             if i is not a valid field reference.
      */
     public String getFieldName(int i) throws NoSuchElementException {
-        // some code goes here
-        return null;
+      if (i >= 0 && i < tdItems.length) {
+        return tdItems[i].fieldName;
+      }
+      throw new NoSuchElementException("{i} is Out of bounds");
     }
 
     /**
@@ -107,8 +117,10 @@ public class TupleDesc implements Serializable {
      *             if i is not a valid field reference.
      */
     public Type getFieldType(int i) throws NoSuchElementException {
-        // some code goes here
-        return null;
+      if (i >= 0 && i < tdItems.length) {
+        return tdItems[i].fieldType;
+      }
+      throw new NoSuchElementException("{i} is Out of bounds");
     }
 
     /**
@@ -121,8 +133,11 @@ public class TupleDesc implements Serializable {
      *             if no field with a matching name is found.
      */
     public int fieldNameToIndex(String name) throws NoSuchElementException {
-        // some code goes here
-        return 0;
+      for (int i = 0; i < tdItems.length; ++i) {
+        if (name == tdItems[i].fieldName) {
+          return i;
+        } }
+      throw new NoSuchElementException("Element {name} not found");
     }
 
     /**
